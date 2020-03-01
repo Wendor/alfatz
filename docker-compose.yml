@@ -17,6 +17,25 @@ services:
       - ./sql/scripts:/usr/src/app 
     working_dir: /usr/src/app
     command: sh -c ' chmod +x ./entrypoint.sh; ./entrypoint.sh & /opt/mssql/bin/sqlservr;'
-    network_mode: bridge
+    networks:
+      alfatz:
+        ipv4_address: 192.168.172.2
 
+  api:
+    build: ./webapi
+    restart: always
+    container_name: api
+    depends_on:
+      - sql
+    ports:
+      - 5000:5000
+    networks:
+      alfatz:
+        ipv4_address: 192.168.172.3
 
+networks:
+  alfatz:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.172.0/24

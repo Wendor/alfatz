@@ -17,7 +17,18 @@ namespace webapi.Controllers
 
         [HttpGet("{id}")]
         public IEnumerable<ProductTop> Get(int id) {
-            return this._context.ProductTop.FromSqlRaw("GetProductTop @variant="+id).ToArray();
+            var allowedTops = this._context.Role
+                .FromSqlRaw("exec GetRole")
+                .Select(e => e.Id)
+                .ToArray();
+
+            if(!allowedTops.Contains(id)) {
+                return new List<ProductTop>();
+            }
+
+            return this._context.ProductTop
+                .FromSqlRaw("GetProductTop @variant="+id)
+                .ToArray();
         }
     }
 }

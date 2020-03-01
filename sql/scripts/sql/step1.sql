@@ -1,6 +1,8 @@
--- EXEC GetProductTop @variant = 1;
+USE TestData
+GO
 
-DROP PROCEDURE IF EXISTS GetPproductTop;
+-- EXEC GetProductTop @variant = 1;
+DROP PROCEDURE IF EXISTS GetProductTop;
 GO
 
 CREATE PROCEDURE GetProductTop (
