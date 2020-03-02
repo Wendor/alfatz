@@ -1,10 +1,9 @@
-version: '3'
+version: "3"
 
 services:
-  sql:
+  sqlserver:
     image: mcr.microsoft.com/mssql/server:2017-latest
     restart: always
-    container_name: sql
     ports:
       - 1433:1433
     environment:
@@ -14,27 +13,37 @@ services:
       - ./sql/data/data:/var/opt/mssql/data
       - ./sql/data/log:/var/opt/mssql/log
       - ./sql/data/secrets:/var/opt/mssql/secrets
-      - ./sql/scripts:/usr/src/app 
+      - ./sql/scripts:/usr/src/app
     working_dir: /usr/src/app
     command: sh -c ' chmod +x ./entrypoint.sh; ./entrypoint.sh & /opt/mssql/bin/sqlservr;'
     networks:
-      alfatz:
+      alfanet:
         ipv4_address: 192.168.172.2
 
-  api:
-    build: ./webapi
+  alfaapi:
+    build: ./alfaapi
     restart: always
-    container_name: api
     depends_on:
-      - sql
+      - sqlserver
     ports:
       - 5000:5000
     networks:
-      alfatz:
+      alfanet:
         ipv4_address: 192.168.172.3
 
+  alfafront:
+    build: ./alfafront
+    restart: always
+    depends_on:
+      - alfaapi
+    ports:
+      - 8000:80
+    networks:
+      alfanet:
+        ipv4_address: 192.168.172.4
+
 networks:
-  alfatz:
+  alfanet:
     driver: bridge
     ipam:
       config:

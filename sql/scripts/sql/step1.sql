@@ -1,11 +1,9 @@
+-- Скрипт содержит процедуру, нобходимую для задания 1.
 USE TestData
 GO
 
--- EXEC GetProductTop @variant = 1;
-DROP PROCEDURE IF EXISTS GetProductTop;
-GO
-
-CREATE PROCEDURE GetProductTop (
+-- EXEC GenerateReport @variant = 1;
+CREATE PROCEDURE GenerateReport (
   @variant SMALLINT
 ) AS
 BEGIN
