@@ -5,19 +5,24 @@ services:
     image: mcr.microsoft.com/mssql/server:2017-latest
     restart: always
     ports:
-      - 1433:1433
+      # sql сервер будет доступен на хосте по адресу localhost:14330
+      - 14330:1433
     environment:
       ACCEPT_EULA: "Y"
       SA_PASSWORD: "MyStrong@Passw0rd"
+    # Известная бага у MS, нельзя просто взять и смонтировать /var/opt/mssql под Windows
     volumes:
       - ./sql/data/data:/var/opt/mssql/data
       - ./sql/data/log:/var/opt/mssql/log
       - ./sql/data/secrets:/var/opt/mssql/secrets
       - ./sql/scripts:/usr/src/app
     working_dir: /usr/src/app
+    # Вызов скрипта для импорта данных и запуск sqlserver
     command: sh -c ' chmod +x ./entrypoint.sh; ./entrypoint.sh & /opt/mssql/bin/sqlservr;'
     networks:
       alfanet:
+        # Почему-то, из asp.net не удавалось подключиться к серверу по имени 'sqlserver'.
+        # Не стал тратить время на выяснение причин. Решил так, в рамках задачи - не принципиально.
         ipv4_address: 192.168.172.2
 
   alfaapi:
@@ -25,8 +30,6 @@ services:
     restart: always
     depends_on:
       - sqlserver
-    ports:
-      - 5000:5000
     networks:
       alfanet:
         ipv4_address: 192.168.172.3
@@ -36,6 +39,7 @@ services:
     restart: always
     depends_on:
       - alfaapi
+    # Проект будет доступен на порту 8000, если на хосте он занят, необходимо сменить его здесь
     ports:
       - 8000:80
     networks:

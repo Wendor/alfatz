@@ -18,6 +18,7 @@ namespace alfaApi.Controllers
         [HttpGet]
         public IEnumerable<Role> List()
         {
+            // Получаем список возможных ролей
             return this._context.Role.FromSqlRaw("exec GetRole").ToArray();
         }
 

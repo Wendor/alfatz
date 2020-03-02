@@ -18,6 +18,7 @@ namespace alfaApi.Controllers
         [HttpGet()]
         public IEnumerable<Report> List()
         {
+            // Получаем список возможных отчетов
             return this._context.Report.FromSqlRaw("GetReport").ToArray();
         }
     }

@@ -18,16 +18,19 @@ namespace alfaApi.Controllers
         [HttpGet("{id}")]
         public IEnumerable<GeneratedReport> Get(int id)
         {
-            var allowedReports = this._context.Role
+            // Получаем роли пользователя
+            int[] allowedReports = this._context.Role
                 .FromSqlRaw("exec GetUserRole @user=1")
                 .Select(e => e.Id)
                 .ToArray();
 
+            // Проверяем, разрешен ли пользователю данный отчет
             if (!allowedReports.Contains(id))
             {
                 return new List<GeneratedReport>();
             }
 
+            // Генерируем отчет
             return this._context.GeneratedReport
                 .FromSqlRaw("exec GenerateReport @variant=" + id)
                 .ToArray();
