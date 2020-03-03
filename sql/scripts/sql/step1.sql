@@ -1,9 +1,9 @@
 -- Скрипт содержит процедуру, нобходимую для задания 1.
-USE TestData
+USE [TestData]
 GO
 
 -- EXEC GenerateReport @variant = 1;
-CREATE PROCEDURE GenerateReport (
+CREATE PROCEDURE [GenerateReport] (
   @variant SMALLINT
 ) AS
 BEGIN
@@ -16,8 +16,8 @@ BEGIN
   BEGIN
     INSERT INTO @list
       SELECT b.ProductId
-      FROM Buy b
-      INNER JOIN Client c ON b.ClientId = c.Id
+      FROM [Buy] b
+      INNER JOIN [Client] c ON b.ClientId = c.Id
       WHERE
         c.Rank > 5
       GROUP BY b.ProductId
@@ -29,9 +29,9 @@ BEGIN
   IF @variant = 2
   BEGIN
     INSERT INTO @list
-      SELECT b2.ProductId
-      FROM Buy b2
-      GROUP BY b2.ClientId, b2.ProductId
+      SELECT b.ProductId
+      FROM [Buy] b
+      GROUP BY b.ClientId, b.ProductId
       HAVING COUNT(*) >= 2
   END;
 
@@ -41,11 +41,11 @@ BEGIN
   BEGIN
     INSERT INTO @list
       SELECT TOP 5 p.id
-      FROM Product p
+      FROM [Product] p
       ORDER BY (
         SELECT SUM(b2.[Count]*p2.Cost)
-        FROM Product p2
-        INNER JOIN Buy b2 ON b2.ProductId = p2.Id
+        FROM [Product] p2
+        INNER JOIN [Buy] b2 ON b2.ProductId = p2.Id
         WHERE p2.Id = p.Id
       ) DESC
   END;
@@ -55,11 +55,11 @@ BEGIN
     p.*,
     (
       SELECT COUNT(*)
-      FROM Buy b
+      FROM [Buy] b
       LEFT JOIN Client c ON b.ClientId = c.Id
       WHERE b.ProductId = p.Id
     ) as buys
   FROM @list l
-  INNER JOIN Product p ON l.id = p.id
+  INNER JOIN [Product] p ON l.id = p.id
 
 END;
