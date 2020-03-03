@@ -1,6 +1,6 @@
 <template>
   <div id="app" v-loading="loading">
-    <div v-if="!loading">
+    <div v-if="!loading && !errorText">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>Роли</span>
@@ -33,6 +33,7 @@ export default {
   data() {
     return {
       loading: true,
+      errorText: false,
       report: [],
       role: [],
       userRole: []
@@ -95,10 +96,22 @@ export default {
       // Загрузка ролей пользователя
       this.$axios.get("/api/UserRole").then(res => {
         this.userRole = res.data;
-      })
+      }),
+
+      // Error testing
+      // new Promise((resolve, reject) => setTimeout(reject, 3000, "Error"))
     ])
     .then(() => this.loading = false)
-    .catch(() => this.loading = false);
+    .catch((e) => {
+      this.loading = false;
+      this.errorText = e;
+      this.$message({
+        message: e,
+        type: 'error',
+        duration: 0,
+        showClose: true
+      });
+    });
   }
 };
 </script>
