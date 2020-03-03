@@ -108,8 +108,7 @@ export default {
       this.$message({
         message: e,
         type: 'error',
-        duration: 0,
-        showClose: true
+        duration: 0
       });
     });
   }
