@@ -121,40 +121,45 @@ export default Vue.extend({
 });
 </script>
 
-<style>
-html,
-body,
-#app {
+<style lang="scss">
+html, body, #app {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
 }
+
 body {
   display: grid;
-}
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  width: 600px;
-  justify-self: center;
-}
-#app .box-card {
-  margin-top: 60px;
-}
-.box-card .checks {
-  text-align: left;
-}
-#app .btns {
-  margin-top: 20px;
-}
-#app .btns .tabButton {
-  margin: 6px;
-}
-#app .report {
-  margin-top: 20px;
+
+  #app {
+    font-family: "Avenir", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    width: 600px;
+    justify-self: center;
+
+    .box-card {
+      margin-top: 60px;
+
+      .checks {
+        text-align: left;
+      }
+    }
+
+    .btns {
+      margin-top: 20px;
+
+      .tabButton {
+        margin: 6px;
+      }
+    }
+
+    .report {
+      margin-top: 20px;
+    }
+  }
 }
 </style>
