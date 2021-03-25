@@ -12,11 +12,19 @@
   </el-card>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+import axios from 'axios';
+import { ReportRecord } from '../types/report-record';
+
+export default Vue.extend({
   name: "Report",
   props: ["id", "name"],
-  data() {
+  data(): {
+    loading: boolean;
+    tableData: ReportRecord[];
+    emptyText: string;
+  } {
     return {
       loading: true,
       tableData: [],
@@ -24,12 +32,12 @@ export default {
     };
   },
   computed: {
-    emptyTextWithLoading() {
+    emptyTextWithLoading(): string {
       return this.loading ? " " : this.emptyText;
     }
   },
-  mounted() {
-    this.$axios
+  mounted(): void {
+    axios
       .get("/api/GenerateReport/" + this.id)
       .then(res => {
         this.tableData = res.data;
@@ -40,7 +48,7 @@ export default {
         this.loading = false;
       });
   }
-};
+});
 </script>
 
 <style>

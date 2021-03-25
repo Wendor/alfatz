@@ -6,7 +6,6 @@ import "./plugins/element";
 
 Vue.config.productionTip = false;
 
-Vue.prototype.$axios = axios;
 axios.defaults.baseURL =
   process.env.NODE_ENV === "production" ? "" : `http://localhost:5000`;
 

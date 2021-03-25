@@ -30,6 +30,8 @@ services:
     restart: always
     depends_on:
       - sqlserver
+    ports:
+      - 5000:5000
     networks:
       alfanet:
         ipv4_address: 192.168.172.3

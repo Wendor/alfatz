@@ -25,38 +25,53 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
+import axios from 'axios';
 import Report from "./views/Report.vue";
+import { ReportVariant } from './types/report-veriant';
+import { Role } from './types/role';
 
-export default {
+export default Vue.extend({
   name: "app",
-  data() {
+  data(): {
+    loading: boolean;
+    errorText: string;
+    report: ReportVariant[];
+    role: Role[];
+    userRole: number[];
+  } {
     return {
       loading: true,
-      errorText: false,
+      errorText: "",
       report: [],
       role: [],
-      userRole: []
+      userRole: [],
     };
   },
   computed: {
     // Вычисляет массив доступных отчетов согласно ролям
-    avaibleReport() {
-      return this.report.filter(p => this.userRole.includes(p.id));
+    avaibleReport(): ReportVariant[] {
+      return this.report.filter((r: ReportVariant) => this.userRole.includes(r.id));
     },
     // Вычисляет ID открытого в настоящий момент отчета
-    currentReportId() {
+    currentReportId(): number {
       if (this.$route.matched.length == 1) {
         const route = this.$route.matched[0];
-        return route.props.default.id;
+
+        // Баг с типами в vue-router
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const current: ReportVariant = route.props.default;
+        return current.id;
       }
       return 0;
     }
   },
   methods: {
     // Отправка ролей на сохранение
-    updateUserRole() {
-      this.$axios.put("/api/UserRole", this.userRole);
+    updateUserRole(): void {
+      axios.put("/api/UserRole", this.userRole);
 
       // Если сейчас открыт отчет, на который
       // права забрали - закрыть отчет
@@ -69,37 +84,34 @@ export default {
       }
     }
   },
-  created() {
+  created(): void {
     Promise.all([
       // Загрузка списка возможных отчетов
-      this.$axios.get("/api/Report").then(res => {
+      axios.get("/api/Report").then(res => {
         this.report = res.data;
 
         // Добавление отчетов в роутер
-        res.data.map(p => {
-          this.$router.addRoutes([
-            {
+        res.data.forEach((p: ReportVariant) => {
+          const name = "Report-" + p.id;
+          const exists = this.$router.getRoutes().findIndex(r => r.name === name);
+          if (exists === -1) {
+            this.$router.addRoute({
               path: "/" + p.linkName,
-              name: "Report-" + p.id,
+              name,
               component: Report,
-              props: { id: p.id, name: p.name }
-            }
-          ]);
+              props: p,
+            });
+          }
+          
         });
       }),
 
       // Загрузка возможных ролей
-      this.$axios.get("/api/Role").then(res => {
-        this.role = res.data;
-      }),
+      axios.get("/api/Role").then(res => this.role = res.data),
 
       // Загрузка ролей пользователя
-      this.$axios.get("/api/UserRole").then(res => {
-        this.userRole = res.data;
-      }),
+      axios.get("/api/UserRole").then(res => this.userRole = res.data),
 
-      // Error testing
-      // new Promise((resolve, reject) => setTimeout(reject, 3000, "Error"))
     ])
     .then(() => this.loading = false)
     .catch((e) => {
@@ -112,7 +124,7 @@ export default {
       });
     });
   }
-};
+});
 </script>
 
 <style>
