@@ -57,12 +57,8 @@ export default Vue.extend({
     // Вычисляет ID открытого в настоящий момент отчета
     currentReportId(): number {
       if (this.$route.matched.length == 1) {
-        const route = this.$route.matched[0];
-
-        // Баг с типами в vue-router
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const current: ReportVariant = route.props.default;
+        const props = this.$route.matched[0].props as { default: ReportVariant };
+        const current = props.default;
         return current.id;
       }
       return 0;
