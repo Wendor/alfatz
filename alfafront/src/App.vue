@@ -58,8 +58,7 @@ export default Vue.extend({
     currentReportId(): number {
       if (this.$route.matched.length == 1) {
         const props = this.$route.matched[0].props as { default: ReportVariant };
-        const current = props.default;
-        return current.id;
+        return props.default.id;
       }
       return 0;
     }
