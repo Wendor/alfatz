@@ -5,7 +5,7 @@
     </div>
     <el-table :data="tableData" size="mini" :empty-text="emptyTextWithLoading">
       <el-table-column prop="id" label="Id" width="60"></el-table-column>
-      <el-table-column prop="name" label="Название" width="300"></el-table-column>
+      <el-table-column prop="name" label="Название"></el-table-column>
       <el-table-column prop="cost" label="Цена" width="80"></el-table-column>
       <el-table-column prop="buys" label="Продажи" width="80"></el-table-column>
     </el-table>
