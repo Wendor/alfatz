@@ -1,6 +1,7 @@
 <template>
   <div id="app" v-loading="loading">
     <div v-if="!loading && !errorText">
+      <img class="logo" src="alfabank.png" />
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>Роли</span>
@@ -122,6 +123,8 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
+$--color-primary: teal;
+
 html, body, #app {
   height: 100%;
   width: 100%;
@@ -141,9 +144,13 @@ body {
     width: 600px;
     justify-self: center;
 
-    .box-card {
-      margin-top: 60px;
+    .logo {
+      margin-top: 32px;
+      margin-bottom: 32px;
+      width: 200px;
+    }
 
+    .box-card {
       .checks {
         text-align: left;
       }
