@@ -102,7 +102,6 @@ export default Vue.extend({
               props: p,
             });
           }
-          
         });
       }),
 
