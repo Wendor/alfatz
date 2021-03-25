@@ -1,4 +1,4 @@
-FROM node AS build-stage
+FROM node:14 AS build-stage
 WORKDIR /app
 COPY . .
 RUN npm install && npm run build
