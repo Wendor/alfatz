@@ -13,12 +13,15 @@
             :key="r.id"
             v-model="userRole"
             style="display: block;"
-          >{{ r.name }}</el-checkbox>
+            >{{ r.name }}</el-checkbox
+          >
         </el-checkbox-group>
       </el-card>
       <el-button-group class="btns">
-        <router-link v-for="p in avaibleReport" :key="p.id" :to="{ name: 'Report-'+p.id }">
-          <el-button class="tabButton" :type="p.id == currentReportId ? 'primary' : ''">{{ p.name }}</el-button>
+        <router-link v-for="p in avaibleReport" :key="p.id" :to="{ name: 'Report-' + p.id }">
+          <el-button class="tabButton" :type="p.id == currentReportId ? 'primary' : ''" round>{{
+            p.name
+          }}</el-button>
         </router-link>
       </el-button-group>
       <router-view class="report" v-if="userRole.length > 0" :key="$route.fullPath" />
@@ -29,12 +32,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import axios from 'axios';
-import Report from "./views/Report.vue";
+import Report from './views/Report.vue';
 import { ReportVariant } from './types/report-veriant';
 import { Role } from './types/role';
 
 export default Vue.extend({
-  name: "app",
+  name: 'app',
   data(): {
     loading: boolean;
     errorText: string;
@@ -44,7 +47,7 @@ export default Vue.extend({
   } {
     return {
       loading: true,
-      errorText: "",
+      errorText: '',
       report: [],
       role: [],
       userRole: [],
@@ -62,12 +65,12 @@ export default Vue.extend({
         return props.default.id;
       }
       return 0;
-    }
+    },
   },
   methods: {
     // Отправка ролей на сохранение
     updateUserRole(): void {
-      axios.put("/api/UserRole", this.userRole);
+      axios.put('/api/UserRole', this.userRole);
 
       // Если сейчас открыт отчет, на который
       // права забрали - закрыть отчет
@@ -76,23 +79,23 @@ export default Vue.extend({
         this.currentReportId &&
         !this.userRole.includes(this.currentReportId)
       ) {
-        this.$router.push("/");
+        this.$router.push('/');
       }
-    }
+    },
   },
   created(): void {
     Promise.all([
       // Загрузка списка возможных отчетов
-      axios.get("/api/Report").then(res => {
+      axios.get('/api/Report').then((res) => {
         this.report = res.data;
 
         // Добавление отчетов в роутер
         res.data.forEach((p: ReportVariant) => {
-          const name = "Report-" + p.id;
-          const exists = this.$router.getRoutes().findIndex(r => r.name === name);
+          const name = 'Report-' + p.id;
+          const exists = this.$router.getRoutes().findIndex((r) => r.name === name);
           if (exists === -1) {
             this.$router.addRoute({
-              path: "/" + p.linkName,
+              path: '/' + p.linkName,
               name,
               component: Report,
               props: p,
@@ -102,30 +105,31 @@ export default Vue.extend({
       }),
 
       // Загрузка возможных ролей
-      axios.get("/api/Role").then(res => this.role = res.data),
+      axios.get('/api/Role').then((res) => (this.role = res.data)),
 
       // Загрузка ролей пользователя
-      axios.get("/api/UserRole").then(res => this.userRole = res.data),
-
+      axios.get('/api/UserRole').then((res) => (this.userRole = res.data)),
     ])
-    .then(() => this.loading = false)
-    .catch((e) => {
-      this.loading = false;
-      this.errorText = e;
-      this.$message({
-        message: e,
-        type: 'error',
-        duration: 0
+      .then(() => (this.loading = false))
+      .catch((e) => {
+        this.loading = false;
+        this.errorText = e;
+        this.$message({
+          message: e,
+          type: 'error',
+          duration: 0,
+        });
       });
-    });
-  }
+  },
 });
 </script>
 
 <style lang="scss">
 $--color-primary: teal;
 
-html, body, #app {
+html,
+body,
+#app {
   height: 100%;
   width: 100%;
   margin: 0;
@@ -136,7 +140,7 @@ body {
   display: grid;
 
   #app {
-    font-family: "Avenir", Helvetica, Arial, sans-serif;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;

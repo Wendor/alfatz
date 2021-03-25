@@ -1,5 +1,5 @@
 export interface ReportVariant {
-    id: number;
-    name: string;
-    linkName: string;
+  id: number;
+  name: string;
+  linkName: string;
 }

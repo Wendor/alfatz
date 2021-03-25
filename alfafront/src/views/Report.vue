@@ -18,8 +18,8 @@ import axios from 'axios';
 import { ReportRecord } from '../types/report-record';
 
 export default Vue.extend({
-  name: "Report",
-  props: ["id", "name"],
+  name: 'Report',
+  props: ['id', 'name'],
   data(): {
     loading: boolean;
     tableData: ReportRecord[];
@@ -28,33 +28,34 @@ export default Vue.extend({
     return {
       loading: true,
       tableData: [],
-      emptyText: "Нет данных для отображения"
+      emptyText: 'Нет данных для отображения',
     };
   },
   computed: {
     emptyTextWithLoading(): string {
-      return this.loading ? " " : this.emptyText;
-    }
+      return this.loading ? ' ' : this.emptyText;
+    },
   },
   mounted(): void {
     axios
-      .get("/api/GenerateReport/" + this.id)
-      .then(res => {
+      .get('/api/GenerateReport/' + this.id)
+      .then((res) => {
         this.tableData = res.data;
         this.loading = false;
       })
-      .catch(e => {
+      .catch((e) => {
         this.emptyText = e.toString();
         this.loading = false;
       });
-  }
+  },
 });
 </script>
 
 <style lang="scss">
-.clearfix:before, .clearfix:after {
+.clearfix:before,
+.clearfix:after {
   display: table;
-  content: "";
+  content: '';
 }
 
 .clearfix:after {
